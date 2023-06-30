@@ -1,4 +1,4 @@
- import java.util.*;
+import java.util.*;
 
 class Calculator {
     public static void main(String[] args) {
@@ -21,10 +21,13 @@ class Calculator {
         while (!isValid) {
             try {
                 input2 = scanner.nextInt();
+                isValid = true;
             } catch (Exception e) {
                 System.out.println("Please enter valid input. That is not a number.");
+                isValid = false;
+                scanner.nextLine();
             }
-            isValid = true;
+
 
         }
         System.out.println("Enter your second number");
@@ -36,7 +39,8 @@ class Calculator {
                 isValid = true;
             } catch (Exception e) {
                 System.out.println("Please enter valid input. That is not a number.");
-                continue;
+                scanner.nextLine();
+                isValid = false;
             }
 
         }
