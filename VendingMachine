@@ -1,0 +1,144 @@
+import java.util.*;
+public class VendingMachine {
+    public static int chipsCount = 3,
+            sodaCount = 3,
+            gumCount = 3,
+            quartersCount = 0,
+            dimesCount = 0,
+            nickelsCount = 0;
+    public static final double CHIP_PRICE = 1.00;
+    public static final double SODA_PRICE = 1.50;
+    public static final double GUM_PRICE = 0.85;
+    public static double funds = 0;
+    public double itemPrice = 0;
+    public static Scanner scanner = new Scanner(System.in);
+
+    public static void printMenu() {
+
+        System.out.println("Here is our inventory");
+        System.out.println("  Chips (" + chipsCount + ") ------ " + CHIP_PRICE);
+        System.out.println("  Gum (" + gumCount + ") ------ " + GUM_PRICE);
+        System.out.println("  Soda (" + sodaCount + ") ------ " + SODA_PRICE);
+    }
+
+    public static void promptUserForFunds() {
+        System.out.println("Please enter your quarters, followed by dimes, followed by nickels");
+        quartersCount = scanner.nextInt();
+        dimesCount = scanner.nextInt();
+        nickelsCount = scanner.nextInt();
+
+
+        double funds = (quartersCount * 0.25) + (dimesCount * 0.10) + (nickelsCount * 0.05);
+    }
+
+    public static void promptUserForSelection() {
+        System.out.println("What would you like to purchase?");
+    }
+
+    public static String getInput() {
+        String result = scanner.nextLine();
+        return result;
+
+    }
+
+    public static void handleSelection(String userSelection) {
+        double itemPrice = 0;
+        switch (userSelection.toLowerCase()) {
+            case "chips":
+                if (chipsCount > 0) {
+                    itemPrice = CHIP_PRICE;
+                    System.out.println("Do you want to get " + getInput() + "? (Yes/No)");
+                    chipsCount--;
+                } else if (CHIP_PRICE > funds) {
+                    System.out.println("Sorry, you do not have enough money to buy chips.");
+                } else {
+                    System.out.println("Sorry we are out of chips.");
+                    chipsCount = 0;
+                }
+                break;
+            case "soda":
+                if (sodaCount > 0) {
+                    itemPrice = SODA_PRICE;
+                    System.out.println("Do you want to get " + getInput() + "? (Yes/No)");
+                    sodaCount--;
+                } else if (SODA_PRICE > funds) {
+                    System.out.println("Sorry, you do not have enough money to buy a soda.");
+                } else {
+                    System.out.println("Sorry we are out of soda.");
+                    sodaCount = 0;
+                }
+                break;
+            case "gum":
+                if (gumCount > 0) {
+                    itemPrice = GUM_PRICE;
+                    System.out.println("Do you want to get " + getInput() + "? (Yes/No)");
+                    gumCount--;
+                } else if (GUM_PRICE > funds) {
+                    System.out.println("Sorry, you do not have enough money to buy gum.");
+                } else {
+                    System.out.println("Sorry we are out of gum.");
+                    itemPrice = 0;
+                }
+                break;
+            default:
+                System.out.println("That's not a selection");
+        }
+    }
+
+    public static double getChange(double itemPrice, double funds) {
+        double change = funds - itemPrice;
+        return change;
+    }
+
+    public static void ConfirmOrder(double itemPrice) {
+        double change = getChange(funds, itemPrice);
+        String YesNo = scanner.nextLine();
+        boolean ValidInput = false;
+        while (!ValidInput) {
+            if (YesNo.equalsIgnoreCase("Yes")) {
+                ValidInput = true;
+            } else if (YesNo.equalsIgnoreCase("No")) {
+                System.out.println("Order is cancelled.");
+                return;
+            } else {
+                System.out.println("Please enter a valid input.");
+                YesNo = scanner.nextLine();
+            }
+        }
+
+
+    }
+    public static void Transaction() {
+
+        if (funds == CHIP_PRICE) {
+            System.out.println("Thank you for using our vending machine! Please take your chips!");
+        } else if (funds > CHIP_PRICE) {
+            funds = funds - CHIP_PRICE;
+            quartersCount = (int) (funds / 0.25);
+            funds = funds - quartersCount * 0.25;
+            dimesCount = (int) (funds / 0.10);
+            funds = funds - dimesCount * 0.10;
+            nickelsCount = (int) (funds / 0.05);
+        }
+    }
+    public static void main(String[] args) {
+        double itemPrice = 0;
+        //greet user
+        System.out.println("Welcome to the store!");
+        //prompt user for funds
+        promptUserForFunds();
+        //display menu for user
+        printMenu();
+        //prompt user for selection
+        promptUserForSelection();
+        //get selection
+        String userSelection = getInput();
+        handleSelection(userSelection);
+        ConfirmOrder(getChange(itemPrice, funds));
+        Transaction();
+        System.out.println("Here is your change:\n" + quartersCount + " quarter(s).\n" + dimesCount + " dime(s).\n" + nickelsCount + " nickel(s).");
+    }
+
+
+}
+
